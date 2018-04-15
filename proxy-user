@@ -1,0 +1,42 @@
+#!/bin/bash
+
+
+
+
+#The previous number of days that we want to use.  For now we are just using yesterday.
+#Useful for testing purposes
+v='yesterday'
+
+#Put full from yesterday into a variable
+D=`date -d "${v}" '+%Y/%m/%d'`
+
+t='today'
+DT=`date -d "${t}" '+%Y/%m/%d'`
+
+LOG='/var/log/redwood/'
+
+#If not options are passed in, return todays results
+if [[ $1 == "" ]]; then
+	cut -d ',' -f 2 ${LOG}access.log | sort -u | sed '/^[0-9]/!d' | wc -l && cut -d ',' -f 2 ${LOG}access.log | sort -u | sed '/^[0-9]/!d'
+    exit;
+else
+
+while getopts ":0123" opt; do
+  case $opt in
+    0)
+		cut -d ',' -f 2 ${LOG}access.log | sort -u | sed '/^[0-9]/!d' | wc -l && cut -d ',' -f 2 ${LOG}access.log | sort -u | sed '/^[0-9]/!d'
+      ;;
+    1)
+		cut -d ',' -f 2 ${LOG}archive/`date -d "1 day ago" '+%Y/%m/%d'`.log | sort -u | sed '/^[0-9]/!d' | wc -l && cut -d ',' -f 2 ${LOG}archive/`date -d "1 day ago" '+%Y/%m/%d'`.log | sort -u | sed '/^[0-9]/!d'
+      ;;
+    2)
+		cut -d ',' -f 2 ${LOG}archive/`date -d "2 days ago" '+%Y/%m/%d'`.log | sort -u | sed '/^[0-9]/!d' | wc -l && cut -d ',' -f 2 ${LOG}archive/`date -d "1 day ago" '+%Y/%m/%d'`.log | sort -u | sed '/^[0-9]/!d'
+      ;;
+
+    3)
+		cut -d ',' -f 2 ${LOG}archive/`date -d "3 days ago" '+%Y/%m/%d'`.log | sort -u | sed '/^[0-9]/!d' | wc -l && cut -d ',' -f 2 ${LOG}archive/`date -d "1 day ago" '+%Y/%m/%d'`.log | sort -u | sed '/^[0-9]/!d'
+      ;;
+  esac
+
+done
+fi
