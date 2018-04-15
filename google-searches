@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#The previous number of days that we want to use.  For now we are just using yesterday.
+#Useful for testing purposes
+v='yesterday'
+
+#Put full from yesterday into a variable
+D=`date -d "${v}" '+%Y/%m/%d'`
+
+t='today'
+DT=`date -d "${t}" '+%Y/%m/%d'`
+
+
+#If not options are passed in, return todays results
+if [[ $1 == "" ]]; then
+	grep 'Google Search' /var/log/redwood/access.log | awk -F, '{print $1, $2, $3, $13}' | less
+    exit;
+else
+
+while getopts ":0123" opt; do
+  case $opt in
+    0)
+	grep 'Google Search' /var/log/redwood/access.log | awk -F, '{print $1, $2, $3, $13}' | less
+      ;;
+    1)
+	grep 'Google Search' /var/log/redwood/archive/`date -d "1 day ago" '+%Y/%m/%d'`.log | awk -F, '{print $1, $2, $3, $13}' | less
+      ;;
+    2)
+        grep 'Google Search' /var/log/redwood/archive/`date -d "2 days ago" '+%Y/%m/%d'`.log | awk -F, '{print $1, $2, $3, $13}' | less
+      ;;
+
+    3)
+        grep 'Google Search' /var/log/redwood/archive/`date -d "3 days ago" '+%Y/%m/%d'`.log | awk -F, '{print $1, $2, $3, $13}' | less
+      ;;
+  esac
+
+done
+fi
